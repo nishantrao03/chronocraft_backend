@@ -1,0 +1,27 @@
+{
+  "name": "chronocraft_backend",
+  "version": "1.0.0",
+  "description": "ChronoCraft is a time management website. It helps one to streamline tasks according to their deadlines and importance.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nishant Rao'",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.19.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "firebase-admin": "^12.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "latest": "^0.2.0",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.6.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
