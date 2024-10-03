@@ -29,11 +29,23 @@ const generateAIResponse = require('./google_gen_ai/text_generation'); // Adjust
 
 app.use(express.json());
 //app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3001', // Local frontend for development
+  'https://chronocraft-frontend.onrender.com/' // Production frontend on Render
+];
+
 app.use(cors({
-  origin: 'http://localhost:3001', // Replace with your frontend URL
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, etc.) or check if origin is in the allowedOrigins array
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-  credentials: true
+  credentials: true // Allow cookies to be sent
 }));
 //app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //for production, use this
 app.use(cookieParser());
