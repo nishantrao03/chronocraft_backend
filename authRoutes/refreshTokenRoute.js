@@ -18,7 +18,7 @@ router.post('/refresh-token', (req, res) => {
     const newAccessToken = generateAccessToken(user.id);
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict',
       maxAge: 3600 * 1000, // 1 hour
     });
