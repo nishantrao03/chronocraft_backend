@@ -25,14 +25,14 @@ router.post('/login', async (req, res) => {
     res.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // secure in production
-      sameSite: 'Lax',
+      sameSite: 'None',
       maxAge: 3600 * 1000, // 1 hour
     });
     
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // secure in production
-      sameSite: 'Lax',
+      sameSite: 'None',
       maxAge: 7 * 24 * 3600 * 1000, // 7 days
     });
 
