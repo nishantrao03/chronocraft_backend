@@ -4,6 +4,7 @@
   "description": "ChronoCraft is a time management website. It helps one to streamline tasks according to their deadlines and importance.",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Nishant Rao'",
