@@ -19,7 +19,7 @@ router.post('/refresh-token', (req, res) => {
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      sameSite: 'Lax',
       maxAge: 3600 * 1000, // 1 hour
     });
 
