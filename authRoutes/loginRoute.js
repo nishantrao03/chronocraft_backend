@@ -25,15 +25,15 @@ router.post('/login', async (req, res) => {
     // Step 3: Set HTTP-only cookies for access and refresh tokens
     res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // secure in production
-      sameSite: 'None',
+      secure: process.env.NODE_ENV === 'production', // true in production, false in development
+      sameSite: 'Strict', // 'None' in production, 'Strict' in development    
       maxAge: 3600 * 1000, // 1 hour
     });
     
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // secure in production
-      sameSite: 'None',
+      sameSite: 'Strict', // 'None' in production, 'Strict' in development   
       maxAge: 7 * 24 * 3600 * 1000, // 7 days
     });
 
@@ -46,3 +46,5 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+
+//For development, set sameSite to strict and secure to false, and for production, set sameSite to none and secure to true. It works that way.

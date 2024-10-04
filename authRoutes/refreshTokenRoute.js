@@ -20,7 +20,7 @@ router.post('/refresh-token', (req, res) => {
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'None',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Strict', // 'None' in production, 'Strict' in development   
       maxAge: 3600 * 1000, // 1 hour
     });
 
@@ -29,3 +29,5 @@ router.post('/refresh-token', (req, res) => {
 });
 
 module.exports = router;
+
+//For development, set sameSite to strict and secure to false, and for production, set sameSite to none and secure to true. It works that way.
