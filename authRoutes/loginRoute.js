@@ -2,6 +2,7 @@
 const express = require('express');
 const admin = require('../firebase-admin'); // Adjust path as necessary
 const { generateAccessToken, generateRefreshToken } = require('../jwt/jwtUtils');
+require('dotenv').config();
 
 const router = express.Router();
 
