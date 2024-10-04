@@ -6,14 +6,12 @@ const authenticate = require('../authenticate');
 
 // Grant access to a task
 router.put('/tasks/:taskId/grant-access', authenticate, async (req, res) => {
-    console.log("Debug grant");
+    //console.log("Debug grant");
     const { taskId } = req.params;
     const { adminUserId, targetUserId } = req.body;
-    console.log(taskId,adminUserId,targetUserId);
 
     try {
         // Find the task by ID
-        console.log(taskId);
         const task = await tasksDetails.findById(taskId);
 
         if (!task) {
