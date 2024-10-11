@@ -51,10 +51,6 @@ const tasksDetailsSchema = new mongoose.Schema({
       unique: true
     }
   }],
-  totalSubTasks: {
-    type: Number,
-    default: 0
-  },
   completedSubTasks: {
     type: Number,
     default: 0

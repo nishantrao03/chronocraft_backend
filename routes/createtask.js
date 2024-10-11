@@ -24,17 +24,25 @@ router.post('/api/tasks', authenticate, async (req, res) => {
               return res.status(404).json({ error: 'Parent task not found' });
           }
 
-          // 4. If the parent task exists, set the parentTaskId field for the new task
+          // 4. Check if the user is an admin of the parent task
+          const userId = newTask.admins[0]; 
+          const isAdmin = parentTask.admins.includes(userId);
+
+          if (!isAdmin) {
+              return res.status(403).json({ error: 'You are not authorized to add subtasks to this task.' });
+          }
+
+          // 5. If the parent task exists, set the parentTaskId field for the new task
           newTask.parentTaskId = parentTaskId;
 
-          // 5. Save the new task to generate a unique ID for it
+          // 6. Save the new task to generate a unique ID for it
           await newTask.save();
           console.log("Debug 1.3");
 
-          // 6. Add the new task's ID to the subtasks array of the parent task
+          // 7. Add the new task's ID to the subtasks array of the parent task
           parentTask.subTasks.push(newTask._id);
 
-          // 7. Save the updated parent task with the new subtask
+          // 8. Save the updated parent task with the new subtask
           await parentTask.save();
           console.log("Debug 2");
       } else {

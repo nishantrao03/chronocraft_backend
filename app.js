@@ -16,9 +16,12 @@ const addupdate = require('./routes/addupdate');
 const editupdate = require('./routes/editupdate');
 const deleteupdate = require('./routes/deleteupdate');
 const getAiResponse = require('./routes/getAiResponse');
+const incompleteTask = require('./routes/incompleteTask');
+const completeTask = require('./routes/completeTask');
+const requestAccess = require('./routes/requestAccess');
 
 const loginRoute = require('./authRoutes/loginRoute');
-const logoutRoute = require('./authRoutes/logoutRoute')
+const logoutRoute = require('./authRoutes/logoutRoute');
 // const refreshTokenRoute = require('./authRoutes/refreshTokenRoute');
 const refreshTokenRoute = require('./authRoutes/refreshTokenRoute');
 
@@ -77,6 +80,9 @@ app.use(addupdate);
 app.use(editupdate);
 app.use(deleteupdate);
 app.use(getAiResponse);
+app.use(incompleteTask);
+app.use(completeTask);
+app.use(requestAccess);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
