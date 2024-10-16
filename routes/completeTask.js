@@ -9,26 +9,40 @@ router.post('/api/tasks/:id/complete', authenticate, async (req, res) => {
         // 1. Fetch the task using the task id
         const task = await TaskDetails.findById(req.params.id);
 
-        // 2. Check if the number of completed subtasks is equal to the total subtasks
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found.' });
+        }
+
+        // 2. Get userId from request body
+        const { userId } = req.body;
+
+        // 3. Check if userId is present in task.admins
+        if (!task.admins.includes(userId)) {
+            return res.status(403).json({ error: 'User is not authorized to complete this task.' });
+        }
+
+        // 4. Check if the number of completed subtasks is equal to the total subtasks
         if (task.completedSubTasks !== task.subTasks.length) {
             return res.status(400).json({ error: 'All subtasks must be completed first.' });
         }
 
-        // 3. Mark the task as complete
+        // 5. Mark the task as complete
         task.status = 'finished';
         await task.save();
 
-        // 4. Iterate through the parent tasks and update their status
+        // 6. Iterate through the parent tasks and update their status
         let parentTaskId = task.parentTaskId;
 
         while (parentTaskId) {
             const parentTask = await TaskDetails.findById(parentTaskId);
             //console.log(parentTask.title);
 
-            // 5. Increment the completedSubTasks field
+            // 7. Increment the completedSubTasks field
             parentTask.completedSubTasks += 1;
+            console.log("Completed sub tasks");
+            console.log(parentTask.completedSubTasks);
 
-            // 6. Check if the parent task's subtasks are all completed
+            // 8. Check if the parent task's subtasks are all completed
             if (parentTask.completedSubTasks === parentTask.subTasks.length) {
                 parentTask.status = 'finished';
                 await parentTask.save();

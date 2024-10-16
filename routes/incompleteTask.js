@@ -9,27 +9,39 @@ router.post('/api/tasks/:id/incomplete', authenticate, async (req, res) => {
         // 1. Fetch the task using the task id
         const task = await TaskDetails.findById(req.params.id);
 
-        //2. If task is pending, throw error
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found.' });
+        }
+
+        // 2. Get userId from request body
+        const { userId } = req.body;
+
+        // 3. Check if userId is present in task.admins
+        if (!task.admins.includes(userId)) {
+            return res.status(403).json({ error: 'User is not authorized to complete this task.' });
+        }
+
+        //4. If task is pending, throw error
         if (task.status === 'pending') {
             return res.status(400).json({ message: 'Task is already incomplete.' });
         }
 
-        // 3. Mark the task as incomplete
+        // 5. Mark the task as incomplete
         task.status = 'pending';
         await task.save();
 
-        // 4. Iterate through the parent tasks and update their status
+        // 6. Iterate through the parent tasks and update their status
         let parentTaskId = task.parentTaskId;
 
         while (parentTaskId) {
             const parentTask = await TaskDetails.findById(parentTaskId);
             //console.log(parentTask.title);
 
-            // 5. Increment the completedSubTasks field
+            // 7. Increment the completedSubTasks field
             parentTask.completedSubTasks -= 1;
 
-            // 6. Check if the parent task's subtasks are all completed
-            if (parentTask.completedSubTasks === parentTask.subTasks.length-1) {
+            // 8. Check if the parent task's subtasks are all completed
+            if (parentTask.completedSubTasks === parentTask.subTasks.length-1&&parentTask.status==='finished') {
                 parentTask.status = 'pending';
                 await parentTask.save();
                 parentTaskId = parentTask.parentTaskId; // Continue with the next parent

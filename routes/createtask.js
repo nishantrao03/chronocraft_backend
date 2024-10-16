@@ -2,6 +2,7 @@ const express = require('express');
 const UserDetails = require('../models/userDetails'); // Import the UserDetails model
 const TaskDetails = require('../models/taskDetails');
 const authenticate = require('../authenticate');
+const generateAIResponse = require('../google_gen_ai/text_generation');
 
 const router = express.Router();
 
@@ -35,6 +36,20 @@ router.post('/api/tasks', authenticate, async (req, res) => {
           // 5. If the parent task exists, set the parentTaskId field for the new task
           newTask.parentTaskId = parentTaskId;
 
+          //6. Generate the ancestor task description for the task
+          const prompt = `Given the following context, generate a concise description (maximum 100 words) that summarizes the task in relation to its ancestor tasks. This description will serve as the task's 'Ancestor Task Description' (ATD) for reference purposes.
+
+          Current Task Description: ${newTask.description}. 
+          Parent Task ATD: ${parentTask.ancestorTaskDescription}.
+
+          Please ensure the ATD is clear, relevant to the current task, and provides the necessary context from its parent task.`;
+
+          const aiResponse = await generateAIResponse(prompt); // Generate ATD using AI
+          console.log(aiResponse);
+
+          // Set the generated ATD in the new task
+          newTask.ancestorTaskDescription = aiResponse;
+
           // 6. Save the new task to generate a unique ID for it
           await newTask.save();
           console.log("Debug 1.3");
@@ -45,8 +60,10 @@ router.post('/api/tasks', authenticate, async (req, res) => {
           // 8. Save the updated parent task with the new subtask
           await parentTask.save();
           console.log("Debug 2");
+
       } else {
           // If no parentTaskId is provided, just save the new task
+          newTask.ancestorTaskDescription = newTask.description;
           await newTask.save();
           console.log("Debug 3");
       }

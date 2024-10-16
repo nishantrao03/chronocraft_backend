@@ -9,8 +9,8 @@ const JWT_SECRET = process.env.JWT_SECRET; // Store secret in .env
 
 router.post('/refresh-token', (req, res) => {
   const refreshToken = req.cookies.refresh_token;
-  console.log("Refresh token is");
-  console.log(refreshToken);
+  // console.log("Refresh token is");
+  // console.log(refreshToken);
   if (!refreshToken) return res.status(401).json({ message: 'No refresh token provided' });
 
   jwt.verify(refreshToken, JWT_SECRET, (err, user) => {

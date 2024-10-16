@@ -19,6 +19,8 @@ const getAiResponse = require('./routes/getAiResponse');
 const incompleteTask = require('./routes/incompleteTask');
 const completeTask = require('./routes/completeTask');
 const requestAccess = require('./routes/requestAccess');
+const taskdenyaccess = require('./routes/taskdenyaccess');
+const breakTasksWithAI = require('./routes/breakTasksWithAi');
 
 const loginRoute = require('./authRoutes/loginRoute');
 const logoutRoute = require('./authRoutes/logoutRoute');
@@ -83,6 +85,8 @@ app.use(getAiResponse);
 app.use(incompleteTask);
 app.use(completeTask);
 app.use(requestAccess);
+app.use(taskdenyaccess);
+app.use(breakTasksWithAI);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

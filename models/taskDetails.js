@@ -55,6 +55,10 @@ const tasksDetailsSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  ancestorTaskDescription: {
+    type: String,
+    default: ''
+  }
 });
 
 const TasksDetails = mongoose.model('TasksDetails', tasksDetailsSchema);
