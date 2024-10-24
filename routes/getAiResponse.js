@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../authenticate'); // Adjust path as per your project
-const generateAIResponse = require('../google_gen_ai/text_generation') // Import the AI generation function
+const generateAIResponse = require('../google_gen_ai/text_generation'); // Import the AI generation function
 
 // AI Response API
 router.post('/api/airesponse', authenticate, async (req, res) => {
