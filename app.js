@@ -55,11 +55,17 @@ app.use(cors({
 }));
 // Explicitly handle preflight requests
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://chronocraft-frontend.vercel.app'); // Dynamically allow the requesting origin
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
+  const origin = req.get('Origin');
+  // Only allow preflight responses from the allowed origins
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin); // Use dynamic origin based on request
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true'); // Allow cookies
+    res.sendStatus(200); // Respond with status 200 for preflight check
+  } else {
+    res.status(403).send('Forbidden');
+  }
 });
 
 // app.use(cors({
