@@ -37,7 +37,6 @@ app.use(express.json());
 app.use(cors());
 const allowedOrigins = [
   'http://localhost:3001', // Local frontend for development
-  'chronocraft-frontend.vercel.app',
   'https://chronocraft-frontend.vercel.app' // Production frontend on Render
 ];
 
@@ -55,13 +54,13 @@ app.use(cors({
   credentials: true // Allow cookies and credentials
 }));
 // Explicitly handle preflight requests
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin); // Dynamically allow the requesting origin
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
+// app.options('*', (req, res) => {
+//   res.header('Access-Control-Allow-Origin', 'https://chronocraft-frontend.vercel.app'); // Dynamically allow the requesting origin
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   res.sendStatus(200);
+// });
 
 // app.use(cors({
 //   origin: '*', // Allow all origins
