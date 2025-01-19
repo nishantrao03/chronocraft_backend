@@ -35,30 +35,39 @@ const generateAIResponse = require('./google_gen_ai/text_generation'); // Adjust
 
 app.use(express.json());
 //app.use(cors());
+
 const allowedOrigins = [
   'http://localhost:3001', // Local frontend for development
-  'https://chronocraft-frontend.onrender.com',
-  'https://chronocraft-frontend.vercel.app' // Production frontend on Render
+  'https://chronocraft-frontend.onrender.com', // Render production frontend
+  'https://chronocraft-frontend.vercel.app' // Vercel production frontend
 ];
 
-// Middleware to handle CORS
-app.use((req, res, next) => {
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+// Handle preflight requests
+app.options('*', (req, res) => {
   const origin = req.headers.origin;
   if (!origin || allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin || '*');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  } else {
-    console.log("Blocked by CORS:", origin);
-  }
-
-  // Handle preflight (OPTIONS) requests
-  if (req.method === 'OPTIONS') {
     return res.sendStatus(204); // No Content
   }
-
-  next();
+  console.log("Blocked preflight request:", origin);
+  res.sendStatus(403); // Forbidden
 });
 //app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //for production, use this
 app.use(cookieParser());
