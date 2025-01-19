@@ -35,40 +35,25 @@ const generateAIResponse = require('./google_gen_ai/text_generation'); // Adjust
 
 app.use(express.json());
 //app.use(cors());
-
 const allowedOrigins = [
   'http://localhost:3001', // Local frontend for development
-  'https://chronocraft-frontend.onrender.com', // Render production frontend
-  'https://chronocraft-frontend.vercel.app' // Vercel production frontend
+  'https://chronocraft-frontend.onrender.com',
+  'https://chronocraft-frontend.vercel.app' // Production frontend on Render
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps, Postman, etc.) or check if origin is in the allowedOrigins array
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log("Blocked by CORS:", origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true // Allow cookies to be sent
 }));
-
-// Handle preflight requests
-app.options('*', (req, res) => {
-  const origin = req.headers.origin;
-  if (!origin || allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    return res.sendStatus(204); // No Content
-  }
-  console.log("Blocked preflight request:", origin);
-  res.sendStatus(403); // Forbidden
-});
 //app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //for production, use this
 app.use(cookieParser());
 const connectDB = require("./db");
