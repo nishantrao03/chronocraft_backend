@@ -58,7 +58,7 @@ app.use(cors({
   origin: '*', // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-  credentials: false // Set to false as credentials cannot be used with wildcard origin
+  credentials: true // Set to false as credentials cannot be used with wildcard origin
 }));
 
 //app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //for production, use this
