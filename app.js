@@ -54,6 +54,21 @@ app.use(cors({
   credentials: true // Allow cookies to be sent
 }));
 
+// Explicitly handle preflight requests
+app.options('*', (req, res) => {
+  const origin = req.get('Origin');
+  // Only allow preflight responses from the allowed origins
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin); // Use dynamic origin based on request
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true'); // Allow cookies
+    res.sendStatus(200); // Respond with status 200 for preflight check
+  } else {
+    res.status(403).send('Forbidden');
+  }
+});
+
 
 // app.use(cors({
 //   origin: '*', // Allow all origins
