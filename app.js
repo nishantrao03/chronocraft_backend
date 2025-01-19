@@ -55,9 +55,7 @@ app.use(cors({
   credentials: true // Allow cookies to be sent
 }));
 
-app.options('*', (req, res) => {
-  res.sendStatus(200); // Respond with HTTP OK for preflight
-});
+app.options('*', cors());
 
 // app.use(cors({
 //   origin: '*', // Allow all origins
