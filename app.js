@@ -37,7 +37,8 @@ app.use(express.json());
 app.use(cors());
 const allowedOrigins = [
   'http://localhost:3001', // Local frontend for development
-  'chronocraft-frontend.vercel.app' // Production frontend on Render
+  'chronocraft-frontend.vercel.app',
+  'https://chronocraft-frontend.vercel.app' // Production frontend on Render
 ];
 
 app.use(cors({
