@@ -40,19 +40,19 @@ const allowedOrigins = [
   'https://chronocraft-frontend.vercel.app' // Production frontend on Render
 ];
 
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // Allow requests with no origin (like mobile apps, Postman, etc.) or check if origin is in the allowedOrigins array
-//     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-//   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-//   credentials: true // Allow cookies to be sent
-// }));
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, etc.) or check if origin is in the allowedOrigins array
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true // Allow cookies to be sent
+}));
 
 // app.use(cors({
 //   origin: '*', // Allow all origins
@@ -61,7 +61,7 @@ const allowedOrigins = [
 //   credentials: true // Set to false as credentials cannot be used with wildcard origin
 // }));
 
-app.use(cors({ origin: 'https://chronocraft-frontend.vercel.app', credentials: true })); //for production, use this
+//app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //for production, use this
 app.use(cookieParser());
 const connectDB = require("./db");
 
