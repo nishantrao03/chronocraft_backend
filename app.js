@@ -42,31 +42,18 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow specific origins or requests without an origin (like Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps, Postman, etc.) or check if origin is in the allowedOrigins array
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // Allow cookies and credentials
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true // Allow cookies to be sent
 }));
-// Explicitly handle preflight requests
-app.options('*', (req, res) => {
-  const origin = req.get('Origin');
-  // Only allow preflight responses from the allowed origins
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin); // Use dynamic origin based on request
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true'); // Allow cookies
-    res.sendStatus(200); // Respond with status 200 for preflight check
-  } else {
-    res.status(403).send('Forbidden');
-  }
-});
+
 
 // app.use(cors({
 //   origin: '*', // Allow all origins
