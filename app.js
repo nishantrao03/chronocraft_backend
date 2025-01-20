@@ -52,13 +52,21 @@ app.use(cors({
   credentials: true // Allow credentials (cookies, HTTP authentication, etc.)
 }));
 
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin); // Allow the origin of the preflight request
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200); // Respond with HTTP 200
+// app.options('*', (req, res) => {
+//   res.header('Access-Control-Allow-Origin', req.headers.origin); // Allow the origin of the preflight request
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   res.sendStatus(200); // Respond with HTTP 200
+// });
+
+app.use((req, res, next) => {
+  console.log('Origin:', req.get('Origin'));
+  res.setHeader('Access-Control-Allow-Origin', req.get('Origin'));
+  console.log('Access-Control-Allow-Origin:', res.get('Access-Control-Allow-Origin'));
+  next();
 });
+
 
 
 
