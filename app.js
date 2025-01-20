@@ -69,11 +69,20 @@ app.options('*', (req, res) => {
 });
 
 app.use((req, res, next) => {
-  console.log('Origin:', req.get('Origin'));
-  res.setHeader('Access-Control-Allow-Origin', req.get('Origin'));
+  const origin = req.get('Origin');
+
+  // Log the origin for debugging purposes
+  console.log('Origin:', origin);
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin); // Dynamically set the allowed origin
+  }
+
+  // Log the Access-Control-Allow-Origin for debugging purposes
   console.log('Access-Control-Allow-Origin:', res.get('Access-Control-Allow-Origin'));
   next();
 });
+
 
 
 
