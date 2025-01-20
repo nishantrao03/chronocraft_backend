@@ -52,13 +52,21 @@ app.use(cors({
   credentials: true // Allow credentials (cookies, HTTP authentication, etc.)
 }));
 
-// app.options('*', (req, res) => {
-//   res.header('Access-Control-Allow-Origin', req.headers.origin); // Allow the origin of the preflight request
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   res.header('Access-Control-Allow-Credentials', 'true');
-//   res.sendStatus(200); // Respond with HTTP 200
-// });
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin); // Allow the specific origin
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allowed methods
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
+    res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+    console.log('Preflight request - Access-Control-Allow-Origin:', origin);
+    return res.sendStatus(200); // Respond with HTTP 200
+  }
+
+  console.log('Preflight request denied for origin:', origin);
+  res.sendStatus(403); // Forbidden if the origin is not allowed
+});
 
 app.use((req, res, next) => {
   console.log('Origin:', req.get('Origin'));
