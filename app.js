@@ -34,82 +34,26 @@ require('dotenv').config();
 const generateAIResponse = require('./google_gen_ai/text_generation'); // Adjust the path as necessary
 
 app.use(express.json());
-app.use(cors());
+//app.use(cors());
 const allowedOrigins = [
-  'http://localhost:3001', // Local development frontend
-  'https://chronocraft-frontend.vercel.app' // Production frontend
+  'http://localhost:3001', // Local frontend for development
+  'https://chronocraft-frontend.onrender.com',
+  'https://chronocraft-frontend.vercel.app' // Production frontend on Render
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like Postman) or check if the origin is allowed
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin); // Dynamically set the allowed origin
+    // Allow requests with no origin (like mobile apps, Postman, etc.) or check if origin is in the allowedOrigins array
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true // Allow credentials (cookies, HTTP authentication, etc.)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true // Allow cookies to be sent
 }));
-
-app.options('*', (req, res) => {
-  const origin = req.headers.origin;
-
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin); // Allow the specific origin
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allowed methods
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allowed headers
-    res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
-    console.log('Preflight request - Access-Control-Allow-Origin:', origin);
-    return res.sendStatus(200); // Respond with HTTP 200
-  }
-
-  console.log('Preflight request denied for origin:', origin);
-  res.sendStatus(403); // Forbidden if the origin is not allowed
-});
-
-app.use((req, res, next) => {
-  const origin = req.get('Origin');
-
-  // Log the origin for debugging purposes
-  console.log('Origin:', origin);
-
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin); // Dynamically set the allowed origin
-  }
-
-  // Log the Access-Control-Allow-Origin for debugging purposes
-  console.log('Access-Control-Allow-Origin:', res.get('Access-Control-Allow-Origin'));
-  next();
-});
-
-
-
-
-
-// // Explicitly handle preflight requests
-// app.options('*', (req, res) => {
-//   const origin = req.get('Origin');
-//   // Only allow preflight responses from the allowed origins
-//   if (allowedOrigins.includes(origin)) {
-//     res.header('Access-Control-Allow-Origin', origin); // Use dynamic origin based on request
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     res.header('Access-Control-Allow-Credentials', 'true'); // Allow cookies
-//     res.sendStatus(200); // Respond with status 200 for preflight check
-//   } else {
-//     res.status(403).send('Forbidden');
-//   }
-// });
-
-
-// app.use(cors({
-//   origin: '*', // Allow all origins
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-//   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-//   credentials: true // Set to false as credentials cannot be used with wildcard origin
-// }));
-
 //app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //for production, use this
 app.use(cookieParser());
 const connectDB = require("./db");
